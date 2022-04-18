@@ -2,10 +2,10 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 
 public class GameController : MonoBehaviour
 {
-
     public Text moneyText;
     public Text healthText;
     public Text damageText;
@@ -62,6 +62,7 @@ public class GameController : MonoBehaviour
 
     public Image healthBar;
     public Image timerBar;
+    public Image bgBoss;//boss background
 
     public DateTime currentDate;
     public DateTime oldTime;
@@ -78,7 +79,7 @@ public class GameController : MonoBehaviour
     {
         get
         {
-            return pCost * Math.Pow(1.07, pLevel);
+            return 10 * Math.Pow(1.07, pLevel);
         }
     }
     public int pLevel;
@@ -93,10 +94,10 @@ public class GameController : MonoBehaviour
     public Text cLevelText;
     public Text cPowerText;
     public double cCost
-        {
+    {
         get
         {
-            return cCost * Math.Pow(1.07, cLevel);
+            return 10 * Math.Pow(1.07, cLevel);
         }
     }
     public int cLevel;
@@ -153,7 +154,7 @@ public class GameController : MonoBehaviour
         }
         multiValueMoney = multiValue * moneyPerSec;
         multiTimer -= Time.deltaTime;
-        multiText.text = "$" + multiValueMoney.ToString("F2");
+        multiText.text = "$" + WordNotation(multiValueMoney,"F2");
         if (multiTimer <= 0)
         {
             // multiValue = new System.Random().Next(5, 10);
@@ -165,12 +166,12 @@ public class GameController : MonoBehaviour
         {
             multiTimer -= Time.deltaTime;
         }
-        moneyText.text = "$" + money.ToString("F2");// ToString("F2") makes numer shorter
-        damageText.text = "+" + damage + "Damage Per Click";
-        dpsText.text = "+" + dps + "Damage Per Second";
+        moneyText.text = "$" + WordNotation(money,"F2");// ToString("F2") makes numer shorter
+        damageText.text = WordNotation(damage,"F2") + "Damage Per Click";
+        dpsText.text = WordNotation(dps,"F2") + "Damage Per Second";
         stageText.text = "Stage-" + stage;
         killsText.text = kills + "/" + killsMax + "Kills";
-        healthText.text = health.ToString("F2") + "/" + healthCap + "HP";
+        healthText.text = WordNotation(health,"F2") + "/" + WordNotation(healthCap,"F2") + "HP";
         healthBar.fillAmount = (float)(health / healthCap);
         timerText.text = timer.ToString("F2") + "/" + timerCap;
 
@@ -208,15 +209,15 @@ public class GameController : MonoBehaviour
         switch (id)
         {
             case "p1":
-                if (pCost >= money)
+                if (money >= pCost)
                 {
-                    UpgradeDefaults(pLevel, pCost);
+                    UpgradeDefaults(ref pLevel, pCost);
                 }
                 break;
             case "c1":
-                if (cCost >= money)
+                if (money >= cCost)
                 {
-                    UpgradeDefaults(pLevel, pCost);
+                    UpgradeDefaults(ref cLevel, pCost);
                 }
                 break;
         }
@@ -224,19 +225,41 @@ public class GameController : MonoBehaviour
 
     public void Upgrades()
     {
-        cCostText.text = "Cost:$" + cCost;
+        cCostText.text = "Cost:$" + WordNotation(cCost,"F2");
         cLevelText.text = "Level:" + cLevel;
-        cPowerText.text = cPower + "per hit";
-        pCostText.text = "Cost:$" + pCost;
+        cPowerText.text = "+2 per hit";
+        pCostText.text = "Cost:$" + WordNotation(pCost,"F2");
         pLevelText.text = "Level:" + pLevel;
-        pPowerText.text = pPower + "per second";
-        dps= pPower;
+        pPowerText.text = "+5 per second";
+        dps = pPower;
         damage = 1 + cPower;
     }
-    public void UpgradeDefaults(int level, double cost)
+    public void UpgradeDefaults(ref int level,double cost)
     {
+        money -= cost;
         level++;
-        cost -= money;
+    }
+    public string WordNotation(double number,string digits) //converting big number to ABC
+    {
+        double digitsTemp = Math.Floor(Math.Log10(number));
+        IDictionary<double, string> prefixes=new Dictionary<double, string>()
+        {   
+            {3, "K"},
+            {6, "M"}, 
+            {9, "B"},
+            {12, "T"},
+            {15, "Qa"},     
+            {18, "Qi"},
+            {21, "Se"},
+            {24, "Sep"},
+           
+        };
+        double digitsEvery3 = 3 * Math.Floor(digitsTemp / 3);
+        if (number >= 1000)
+        {
+            return (number/Math.Pow(10, digitsEvery3)).ToString(digits)+prefixes[digitsEvery3];
+        }
+        return number.ToString(digits);
     }
     public void IsBossChecker()
     {
@@ -258,15 +281,17 @@ public class GameController : MonoBehaviour
             timerText.text = timer.ToString("F2") + "/" + timerCap;
             timerBar.gameObject.SetActive(true);
             timerBar.fillAmount = timer / timerCap;
+            bgBoss.gameObject.SetActive(true);
         }
         else
         {
             isBoss = 1;
             stageText.text = "Stage-" + stage;
             timerText.text = "";
-            timerBar.gameObject.SetActive(false);
+            timerBar.gameObject.SetActive(false);   
             timer = 30;
             killsMax = 10;
+            bgBoss.gameObject.SetActive(false);
         }
     }
 
