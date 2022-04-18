@@ -20,6 +20,7 @@ public class GameController : MonoBehaviour
     public GameObject forward;
     public GameObject offlineBox;
     public GameObject multiBox;
+    public GameObject boss;
 
     public double money;
     public double moneyPerSec
@@ -282,6 +283,7 @@ public class GameController : MonoBehaviour
             timerBar.gameObject.SetActive(true);
             timerBar.fillAmount = timer / timerCap;
             bgBoss.gameObject.SetActive(true);
+            boss.gameObject.SetActive(true);
         }
         else
         {
@@ -292,6 +294,7 @@ public class GameController : MonoBehaviour
             timer = 30;
             killsMax = 10;
             bgBoss.gameObject.SetActive(false);
+            boss.gameObject.SetActive(false);
         }
     }
 
