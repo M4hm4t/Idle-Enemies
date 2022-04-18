@@ -26,7 +26,7 @@ public class GameController : MonoBehaviour
     {
         get
         {
-            return (Math.Ceiling(healthCap / 14) / healthCap) * dps;
+            return Math.Ceiling(healthCap / 14) / healthCap * dps;
         }
     }
     public double multiValue;
@@ -157,7 +157,7 @@ public class GameController : MonoBehaviour
         multiText.text = "$" + WordNotation(multiValueMoney,"F2");
         if (multiTimer <= 0)
         {
-            // multiValue = new System.Random().Next(5, 10);
+           // multiValue = new System.Random().Next(5, 10);
             //multiTimer = multiTimerCap;
             multiBox.gameObject.SetActive(true);
 
@@ -372,10 +372,10 @@ public class GameController : MonoBehaviour
     public void OpenMulti()
     {
         multiBox.gameObject.SetActive(false);
-        money += multiValueMoney;
         multiTimerCap = new System.Random().Next(5, 10);
-        multiTimer = multiTimerCap;
         multiValue = new System.Random().Next(20, 100);
+        multiTimer = multiTimerCap;
+        money += multiValueMoney;
     }
     public void Kill()
     {
