@@ -116,15 +116,8 @@ public class GameController : MonoBehaviour
 
     public void Start()
     {
-        
-        if (username == "User Name")//not working
-        {
-            userNameBox.gameObject.SetActive(true);
-        }
-        else
-        {
-            userNameBox.gameObject.SetActive(false);
-        }
+        Invoke("UserNameInvoke", 1);
+
         multiBox.gameObject.SetActive(false);
         offlineBox.gameObject.SetActive(false);
         Load();
@@ -145,6 +138,7 @@ public class GameController : MonoBehaviour
 
     public void Update()
     {
+        
         /*  if (offlineLoadCount==1)
           {
               LoadOfflineProuction();
@@ -158,7 +152,7 @@ public class GameController : MonoBehaviour
         {
             health -= dps * Time.deltaTime;//idle damage
         }
-        multiValueMoney = multiValue * moneyPerSec;
+        multiValueMoney = multiValue * damage;
         multiTimer -= Time.deltaTime;
         multiText.text = "$" + WordNotation(multiValueMoney,"F2");
         if (multiTimer <= 0)
@@ -209,7 +203,17 @@ public class GameController : MonoBehaviour
             Save();
         }
     }
-  
+  public void UserNameInvoke()
+    {
+        if (username == "User Name")//not working
+        {
+            userNameBox.gameObject.SetActive(true);
+        }
+        else
+        {
+            userNameBox.gameObject.SetActive(false);
+        }
+    }
     public void BuyUpgrade(string id)
     {
         switch (id)
@@ -345,7 +349,7 @@ public class GameController : MonoBehaviour
     public void Load()
     {
         money = double.Parse(PlayerPrefs.GetString("money", "0"));
-        username = PlayerPrefs.GetString("username");
+        username = PlayerPrefs.GetString("username",username);
         damage = double.Parse(PlayerPrefs.GetString("damage", "1"));
         dps = double.Parse(PlayerPrefs.GetString("dps", "0"));
         stage = PlayerPrefs.GetInt("stage", 1);
