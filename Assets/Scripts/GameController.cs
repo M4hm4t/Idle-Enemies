@@ -62,6 +62,8 @@ public class GameController : MonoBehaviour
     public float multiTimerCap;
 
     public Image healthBar;
+    public GameObject bossImage;
+    public GameObject enemyImage;
     public Image timerBar;
     public Image bgBoss;//boss background
 
@@ -76,6 +78,7 @@ public class GameController : MonoBehaviour
     public Text pCostText;
     public Text pLevelText;
     public Text pPowerText;
+
     public double pCost
     {
         get
@@ -109,9 +112,11 @@ public class GameController : MonoBehaviour
             return 2 * cLevel;
         }
     }
+    
 
     public void Start()
     {
+        
         if (username == "User Name")//not working
         {
             userNameBox.gameObject.SetActive(true);
@@ -204,7 +209,7 @@ public class GameController : MonoBehaviour
             Save();
         }
     }
-
+  
     public void BuyUpgrade(string id)
     {
         switch (id)
@@ -266,7 +271,7 @@ public class GameController : MonoBehaviour
     {
         if (stage % 5 == 0)
         {
-
+          
             isBoss = 10;
             stageText.text = "BOSS Stage-" + stage;
             timerText.text = "";
@@ -284,6 +289,8 @@ public class GameController : MonoBehaviour
             timerBar.fillAmount = timer / timerCap;
             bgBoss.gameObject.SetActive(true);
             boss.gameObject.SetActive(true);
+            bossImage.gameObject.SetActive(true);
+            enemyImage.gameObject.SetActive(false);
         }
         else
         {
@@ -295,6 +302,7 @@ public class GameController : MonoBehaviour
             killsMax = 10;
             bgBoss.gameObject.SetActive(false);
             boss.gameObject.SetActive(false);
+            bossImage.gameObject.SetActive(false);
         }
     }
 
@@ -337,7 +345,7 @@ public class GameController : MonoBehaviour
     public void Load()
     {
         money = double.Parse(PlayerPrefs.GetString("money", "0"));
-        username = (PlayerPrefs.GetString("username", "User Name"));
+        username = PlayerPrefs.GetString("username");
         damage = double.Parse(PlayerPrefs.GetString("damage", "1"));
         dps = double.Parse(PlayerPrefs.GetString("dps", "0"));
         stage = PlayerPrefs.GetInt("stage", 1);
