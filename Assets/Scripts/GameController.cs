@@ -35,15 +35,7 @@ public class GameController : MonoBehaviour
     public double damage;//dpc
     public double health;
     public double dps; //damage per second
-    public double healthCap
-    {
-        get
-        {
-            return 10 * System.Math.Pow(2, stage - 1) * isBoss;
-        }
-        set { }
-    }
-
+    public double healthCap => 10 * System.Math.Pow(2, stage - 1) * isBoss;// another way to use get {}
     public int stage;
     public int kills;
     public int killsMax;
@@ -116,8 +108,7 @@ public class GameController : MonoBehaviour
 
     public void Start()
     {
-        Invoke("UserNameInvoke", 1);
-
+        Invoke("UserNameInvoke", 0.1f);
         multiBox.gameObject.SetActive(false);
         offlineBox.gameObject.SetActive(false);
         Load();
@@ -167,8 +158,8 @@ public class GameController : MonoBehaviour
             multiTimer -= Time.deltaTime;
         }
         moneyText.text = "$" + WordNotation(money,"F2");// ToString("F2") makes numer shorter
-        damageText.text = WordNotation(damage,"F2") + "Damage Per Click";
-        dpsText.text = WordNotation(dps,"F2") + "Damage Per Second";
+        damageText.text = WordNotation(damage,"F2") + "Damage P/C";
+        dpsText.text = WordNotation(dps,"F2") + "Damage P/S";
         stageText.text = "Stage-" + stage;
         killsText.text = kills + "/" + killsMax + "Kills";
         healthText.text = WordNotation(health,"F2") + "/" + WordNotation(healthCap,"F2") + "HP";
@@ -307,6 +298,7 @@ public class GameController : MonoBehaviour
             bgBoss.gameObject.SetActive(false);
             boss.gameObject.SetActive(false);
             bossImage.gameObject.SetActive(false);
+            enemyImage.gameObject.SetActive(true);
         }
     }
 
